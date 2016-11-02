@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:head>
+    	<!-- 
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxtKafN6AR0DSTzcPYPld4QsbhZFQJLcM" />
+        -->
+
+         <h:outputScript library="js" name="locale-primefaces.js"/>  
+          
+        <title>Teste</title>
+    </h:head>
+    
+    <h:body>
+    	<!-- 
+            <p:gmap center="-28.943,-49.48" zoom="14" type="ROADMAP" style="width:100%;height:500px" />
+          -->  
+          
+            <h:form>
+            
+                Fraudes<br/><br/>
+                
+                <h:panelGrid columns="2">
+                
+                    Id Consumidor:  <p:inputText id="idCons" 	value="#{fraudeBean.fraude.id_consumidor}" />
+                    Tipo:  			<p:inputText id="tipo" 		value="#{fraudeBean.fraude.tipo}"/>
+                    Status:  		<p:inputText id="status" 	value="#{fraudeBean.fraude.status}"/>
+                    Data detecção:	<p:calendar  id="data" value="#{fraudeBean.fraude.data_detecção}" locale="pt" navigator="true" pattern="yyyy-MM-dd" />
+                   <!--  
+                    <h:inputText id="data" 		value="#{fraudeBean.fraude.data_detecção}">
+				
+                    					<f:convertDateTime pattern="dd-MM-yyyy"/>
+                    					<p:outputLabel for="button" value="Button:" />			
+                    				</h:inputText >
+                    -->
+                    <h:inputHidden/>
+                    <h:commandButton value="Cadastrar" action="#{fraudeBean.adicionarFraude}"/>        
+
+                </h:panelGrid>
+                
+                
+                <h:dataTable var="dados" value="#{fraudeBean.listaFraude}" border="1">
+                    
+                    <h:column headerText="id">
+                        <f:facet name="header">
+                            ID FRAUDE
+                        </f:facet>
+                        <h:outputText value="#{dados.id_fraude}"/>
+                    </h:column>
+                    
+                    <h:column headerText="email">
+                        <f:facet name="header">
+                            ID CONSUMIDOR
+                        </f:facet>
+                        <h:outputText value="#{dados.id_consumidor}"/>
+                    </h:column>
+                    
+                     <h:column headerText="data">
+                        <f:facet name="header">
+                            DATA DETECÇÃO
+                        </f:facet>
+                        <h:outputText value="#{dados.data_detecção}"/>
+                    </h:column>
+                    
+                    <h:column headerText="tipo">
+                        <f:facet name="header">
+                            TIPO
+                        </f:facet>
+                        <h:outputText value="#{dados.tipo}"/>
+                    </h:column>
+                    
+                    <h:column headerText="status">
+                        <f:facet name="header">
+                            STATUS
+                        </f:facet>
+                        <h:outputText value="#{dados.status}"/>
+                    </h:column>
+                </h:dataTable>
+            
+            
+            </h:form>
+            
+            
+                
+
+    </h:body>
+</html>
+

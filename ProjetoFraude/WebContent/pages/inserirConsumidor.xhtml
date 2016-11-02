@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+
+	<script type="text/javascript"
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxtKafN6AR0DSTzcPYPld4QsbhZFQJLcM&amp;callback=initMap"/>
+
+	<title>Consumidor</title>
+
+</h:head>
+
+<h:body>
+
+    <ui:composition template="/Templates/modeloGeral.xhtml">
+    <ui:define name="conteudo">
+
+    <p:growl id="messages" showDetail="true" />
+    <p:growl id="growl"     showDetail="true" />
+
+     
+
+    
+    <h:form prependId="false">
+
+        <h:panelGrid columns="2">  
+        Descricao:
+        <h:inputText id="title" 	value="#{pointBean.consumidor.descricao}" size="100"
+                     required="true" requiredMessage="Campo descricao é obrigatório"/>
+        
+        Endereco:  		
+        <h:inputText id="emailTxt" 	value="#{pointBean.consumidor.endereço}"  size="100"
+                     required="true"    requiredMessage="Campo endereço é obrigatório!"/>
+        
+        Tipo:
+        <h:selectOneMenu	value="#{pointBean.consumidor.tipo}">
+            <f:selectItems value="#{consumidorBean.tiposConsumidor}" />
+        </h:selectOneMenu>
+        </h:panelGrid>
+        
+        Localização:
+        <br/>
+        <p:gmap id="gmap" center="-28.943,-49.48" zoom="13" type="ROADMAP" style="width:100%;height:350px"
+        model="#{pointBean.emptyModel}" onPointClick="handlePointClick(event);" widgetVar="map" />
+
+        <br/>
+        <p:commandButton value="Inserir"    actionListener="#{pointBean.saveConsumidor}" 
+                         update=":messages" />
+        <p:commandButton value="Cancelar"   actionListener="#" />
+            
+
+        <h:inputHidden id="latitude" value="#{pointBean.consumidor.latitude}"   />
+        <h:inputHidden id="longitude" value="#{pointBean.consumidor.longitude}" />
+
+    </h:form>
+    
+    
+        
+        
+        
+    <script type="text/javascript">
+    var currentMarker = null;
+    
+
+    function handlePointClick(event) {
+        if(currentMarker === null) {
+
+            document.getElementById('longitude').value = event.latLng.lng();
+            document.getElementById('latitude').value = event.latLng.lat();
+
+            currentMarker = new google.maps.Marker({
+                position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+            });
+                
+            currentMarker.setDraggable(true);
+                
+            PF('map').addOverlay(currentMarker);
+
+            //PF('dlg').show();
+        }else{
+            currentMarker.setPosition(new google.maps.LatLng(event.latLng.lat(), event.latLng.lng() )); 
+        }     
+    }
+
+    function markerAddComplete() {
+        var title = document.getElementById('title');
+        currentMarker.setTitle(title.value);
+        title.value = "";
+
+        currentMarker = null;
+        //PF('dlg').hide();
+    }
+
+    /*function cancel() {
+        PF('dlg').hide();
+        currentMarker.setMap(null);
+        currentMarker = null;
+        
+        return false;
+    }*/
+    
+</script>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+	
+
+
+</ui:define>
+</ui:composition>
+
+</h:body>
+
+</html>
