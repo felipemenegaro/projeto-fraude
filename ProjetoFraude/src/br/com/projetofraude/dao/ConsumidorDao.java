@@ -58,4 +58,53 @@ public class ConsumidorDao {
         return lista;
     }
     
+    //retorna consumidor por id
+    public Consumidor buscaConsumidor(Consumidor c) {
+    	Consumidor retorno = new Consumidor();
+        try {
+        	sessao = HibernateUtil.getSessionFactory().openSession();
+        	sessao.beginTransaction();
+            retorno = (Consumidor) sessao.get(Consumidor.class, c.getId());
+            sessao.getTransaction().commit();
+        } catch (Exception ex) {
+        	sessao.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            if (sessao != null) {
+                try {
+                    sessao.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return retorno;
+    }
+    
+  //altera dados do consumidor
+    public byte updateCliente(Consumidor cliente) {
+        byte transactionok = 0;
+        try {
+        	sessao = HibernateUtil.getSessionFactory().openSession();
+            sessao.beginTransaction();
+            sessao.update(cliente);
+            sessao.getTransaction().commit();
+            transactionok = 0;
+        } catch (Exception e) {
+        	sessao.getTransaction().rollback();
+            transactionok = 2;
+        } finally {
+            if (sessao != null) {
+                try {
+                	sessao.close();
+                } catch (Exception e) {
+                    transactionok = 2;
+                }
+            }
+        }
+        return transactionok;
+    }
+    
+    
+    
 }

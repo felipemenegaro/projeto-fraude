@@ -15,40 +15,21 @@ import javax.faces.context.FacesContext;
 import org.primefaces.event.map.MarkerDragEvent;
 import org.primefaces.model.map.*;
 
-
  
 @ManagedBean (name = "pointBean")
 @SessionScoped
 public class PointBean implements Serializable{
 
-    // ========================================================================= 
-    // ATTRIBUTES 
-    // ========================================================================= 
-   
-    
+
     private MapModel emptyModel;
-    
     private Marker currentMarker;
-    
     private ConsumidorDao dao;
-
     private Consumidor consumidor;
-
-
-
-
-
-    // ========================================================================= 
-    // CONSTRUCTORS 
-    // ========================================================================= 
 
 
     public PointBean() {
         super();
-        
-        // TODO Auto-generated constructor stub
     }
-  
 
     @PostConstruct
     public void init() {
@@ -58,11 +39,7 @@ public class PointBean implements Serializable{
     }
     
     
-    // ========================================================================= 
-    // METHODS 
-    // ========================================================================= 
-    
-    
+ 
     public void saveConsumidor(){
         
         if(consumidor.getDescricao() == null || consumidor.getEndereço() == null || consumidor.getLongitude() == 0){
@@ -85,15 +62,8 @@ public class PointBean implements Serializable{
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Aviso", "Operação realizada com sucesso" ));
             
         }
-        
-        
-
     }
     
-    
-
-   
-
     public void addMarker() {
         currentMarker = new Marker(new LatLng(consumidor.getLatitude(), consumidor.getLongitude()), consumidor.getDescricao());
 
@@ -117,9 +87,7 @@ public class PointBean implements Serializable{
     
     
     
-     // ========================================================================= 
-    // GETTERS & SETTERS 
-    // ========================================================================= 
+ 
 
     
     public Consumidor getConsumidor() {

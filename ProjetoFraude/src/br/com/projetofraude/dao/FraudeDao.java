@@ -7,20 +7,33 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
+import br.com.projetofraude.model.Consumidor;
 import br.com.projetofraude.model.Fraude;
 import br.com.projetofraude.util.HibernateUtil;
 
 public class FraudeDao {
 	private Session sessao;
     private Transaction trans;
+    private ConsumidorDao consumidor_dao = new ConsumidorDao();
     
     public void addFraude(Fraude f){
         try{
             sessao = HibernateUtil.getSessionFactory().openSession();
             trans = sessao.beginTransaction();
             Fraude novo = new Fraude();
+            
+            Consumidor c = new Consumidor();
+            
+            c.setId(f.getId_consumidor());
+            
+            c = consumidor_dao.buscaConsumidor(c);
+            
+            c.setSuspeitaFraude(true);
+            
+            consumidor_dao.updateCliente(c);
+            		
             novo.setId_consumidor(f.getId_consumidor());
-            novo.setData_deteccao(f.getData_deteccao());
+            novo.setData_detecção(f.getData_detecção());
             novo.setStatus(f.getStatus());
             novo.setTipo(f.getTipo());           
             sessao.save(novo);

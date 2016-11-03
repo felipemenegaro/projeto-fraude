@@ -25,55 +25,23 @@ import br.com.projetofraude.dao.ConsumidorDao;
 public class MapaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
 	private MapModel simpleModel;
-
 	private ConsumidorDao consumidorDao = new ConsumidorDao();
-
-	private MapModel advancedModel;
-
+	//private MapModel advancedModel;
 	private Marker marker;
 
+	public MapaBean() {
+	}
+	
 	@PostConstruct
 	public void init() {
-		advancedModel = new DefaultMapModel();
+		//advancedModel = new DefaultMapModel();
 		simpleModel = new DefaultMapModel();
-
-		// Shared coordinates
-
-		System.out.println("Teste1");
-
-		LatLng coord1 = new LatLng(-28.95112, -49.4710);
-		LatLng coord2 = new LatLng(-28.94520, -49.4650);
-		LatLng coord3 = new LatLng(-28.93880, -49.4820);
-		LatLng coord4 = new LatLng(-28.94200, -49.4900);
-
-		// Icons and Data
-
-		/*
-		 * simpleModel.addOverlay(new Marker(coord1, "Konyaalti"));
-		 * simpleModel.addOverlay(new Marker(coord2, "Ataturk Parki"));
-		 * simpleModel.addOverlay(new Marker(coord3, "Karaalioglu Parki"));
-		 * simpleModel.addOverlay(new Marker(coord4, "Kaleici"));
-		 * 
-		 * 
-		 * advancedModel.addOverlay(new Marker(coord1, "1", "imagem1.png",
-		 * "http://maps.google.com/mapfiles/ms/micons/green-dot.png"));
-		 * advancedModel.addOverlay(new Marker(coord2, "2", "imagem2.png",
-		 * "http://maps.google.com/mapfiles/ms/micons/blue-dot.png"));
-		 * advancedModel.addOverlay(new Marker(coord4, "3", "imagem3.png",
-		 * "http://maps.google.com/mapfiles/ms/micons/pink-dot.png"));
-		 * advancedModel.addOverlay(new Marker(coord3, "4", "imagem4.png",
-		 * "http://maps.google.com/mapfiles/ms/micons/yellow-dot.png"));
-		 */
-
+		
 		insereMarcadores();
-
 	}
 
-	public MapaBean() {
-
-	}
+	
 
 	public MapModel getAdvancedModel() {
 		// return advancedModel;
@@ -96,6 +64,7 @@ public class MapaBean implements Serializable {
 		FacesContext.getCurrentInstance().getExternalContext().redirect("consumidor.jsf");
 	}
 
+	
 	public void insereMarcadores() {
 		List<Consumidor> lista = new ArrayList<Consumidor>();// =
 																// consumidorDao.getListaConsumidores();
@@ -120,4 +89,11 @@ public class MapaBean implements Serializable {
 			simpleModel.addOverlay(new Marker(coord, lista.get(i).getDescricao(), "imagem1.png", s));
 		}
 	}
+	
+	public void mapaInd() {
+		simpleModel.getMarkers().clear();
+		
+
+	}
+	
 }

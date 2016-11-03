@@ -5,6 +5,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import br.com.projetofraude.model.Fraude;
+import br.com.projetofraude.dao.ConsumidorDao;
 import br.com.projetofraude.dao.FraudeDao;
 
 @ManagedBean(name = "fraudeBean")
@@ -13,7 +14,7 @@ public class FraudeBean {
 
 	private Fraude fraude = new Fraude();
     private FraudeDao fraudeDao = new FraudeDao();
-    
+
     List<Fraude> lista;
     
     
@@ -23,6 +24,17 @@ public class FraudeBean {
     
     public String adicionarFraude(){
     	fraudeDao.addFraude(fraude);
+    	/*
+    	Consumidor c = new Consumidor();
+        
+        c.setId(f.getId_consumidor());
+        
+        c = consumidor_dao.buscaConsumidor(c);
+        
+        c.setSuspeitaFraude(true);
+        
+        consumidor_dao.updateCliente(c);
+    	*/
     	fraude.clear();
         return "fraude";
     }
