@@ -86,7 +86,8 @@ public class ChartView implements Serializable {
       
         return model;
     }
-     
+    
+    
    /*
     private LineChartModel initCategoryModel() {
         LineChartModel model = new LineChartModel();
