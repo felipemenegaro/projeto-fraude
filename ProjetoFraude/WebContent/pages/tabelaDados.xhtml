@@ -6,11 +6,27 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-	<ui:composition template="/Templates/modeloGeral.xhtml">
-		<ui:define name="conteudo">
-			<p:gmap center="-28.952962, -49.471081" zoom="13" type="HYBRID" style="width:100%;height:400px" model="#{markersView.simpleModel}" />
-		</ui:define>
-	</ui:composition>
-	
+<head>
+
+</head>
+
+
+<body>
+
+<ui:composition template="/Templates/modeloGeral.xhtml">
+	<ui:define name="conteudo">
+			
+			
+		
+	<p:chart type="line" model="#{chartView.lineModel1}" style="height:300px;"/>
+			
+			
+			
+			
+	</ui:define>
+</ui:composition>
+
+</body>
+
 </html>
 
