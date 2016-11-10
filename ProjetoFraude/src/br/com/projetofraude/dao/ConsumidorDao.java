@@ -58,13 +58,35 @@ public class ConsumidorDao {
         return lista;
     }
     
-    //retorna consumidor por id
     public Consumidor buscaConsumidor(Consumidor c) {
     	Consumidor retorno = new Consumidor();
         try {
         	sessao = HibernateUtil.getSessionFactory().openSession();
         	sessao.beginTransaction();
             retorno = (Consumidor) sessao.get(Consumidor.class, c.getId());
+            sessao.getTransaction().commit();
+        } catch (Exception ex) {
+        	sessao.getTransaction().rollback();
+            ex.printStackTrace();
+        } finally {
+            if (sessao != null) {
+                try {
+                    sessao.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return retorno;
+    }
+    
+    //retorna consumidor por id
+    public Consumidor buscaConsumidorID(Integer id) {
+    	Consumidor retorno = new Consumidor();
+        try {
+        	sessao = HibernateUtil.getSessionFactory().openSession();
+        	sessao.beginTransaction();
+            retorno = (Consumidor) sessao.get(Consumidor.class, id);
             sessao.getTransaction().commit();
         } catch (Exception ex) {
         	sessao.getTransaction().rollback();

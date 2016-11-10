@@ -22,19 +22,28 @@
 							closable="false" collapsible="false">  
 	<h:form>  	          
 		<p:panelMenu>
-       		<p:submenu label="Filtros por Tipo">
-       			<p:menuitem value = "Todos" 		outcome="/pages/mapa.xhtml"/>
-				<p:menuitem value = "Residencial"	outcome="/pages/Residencia.xhtml"/>
+
+			<p:submenu label="Consumidores">
+       			<p:menuitem value = "Todos"			outcome="/pages/Todos.xhtml"/>
+				<p:menuitem value = "Residêncial"	outcome="/pages/Residencia.xhtml"/>
 				<p:menuitem value = "Comercial"		outcome="/pages/Comercio.xhtml"/>
 				<p:menuitem value = "Industrial"	outcome="/pages/Industria.xhtml"/>
        	    </p:submenu>
-			<p:submenu label="Inserção">
+			<p:submenu label="Fraudes">
+       			<p:menuitem value = "Todos"			outcome="/pages/fraudeGeral.xhtml"/>
+				<p:menuitem value = "Residêncial"	outcome="/pages/fraudeResidencia.xhtml"/>
+				<p:menuitem value = "Comercial"		outcome="/pages/fraudeComercio.xhtml"/>
+				<p:menuitem value = "Industrial"	outcome="/pages/fraudeIndustria.xhtml"/>
+       	    </p:submenu>
+       	    <p:submenu label="Inserções">
 				<p:menuitem value = "Cliente"	outcome="/pages/inserirConsumidor.xhtml"/>
 				<p:menuitem value = "Fraude"	outcome="/pages/inserirFraude.xhtml"/>
+				<p:menuitem value = "Dados"		outcome="/pages/inserirDados.xhtml"/>
 			</p:submenu>
 			<p:submenu label="Dados">
 				<p:menuitem value = "Cliente"	outcome="/pages/tabelaDados.xhtml"/>
 			</p:submenu>
+			
 		</p:panelMenu>
 	</h:form>
 	</p:layoutUnit>	

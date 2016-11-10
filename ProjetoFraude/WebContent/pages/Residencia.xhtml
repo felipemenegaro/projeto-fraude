@@ -5,60 +5,17 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-<head>
 
-<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxtKafN6AR0DSTzcPYPld4QsbhZFQJLcM" />
-
-</head>
-
-<body>
 	<ui:composition template="/Templates/modeloGeral.xhtml">
 		<ui:define name="conteudo">
-
-
 			<h:form>
-				<p:gmap id="gmap" center="-28.943,-49.48" zoom="13" type="ROADMAP"
-					model="#{mapaBean.advancedModel}" style="width:100%;height:400px">
-
-					<p:ajax event="overlaySelect" listener="#{mapaBean.onMarkerSelect}" />
-
-					<p:gmapInfoWindow id="infoWindow">
-						<p:outputPanel
-							style="text-align: center; display: block; margin: auto">
-
-
-							<h:outputText value="#{mapaBean.marker.data}" />
-							<br />
-							<h:outputText value="#{mapaBean.marker.title}" />
-
-
-							<p:commandButton value="info" actionListener="#{mapaBean.info()}" />
-
-						</p:outputPanel>
-					</p:gmapInfoWindow>
-				</p:gmap>
-
-
-
-				<!-- Preload for demo -->
-				<!--
-    <p:outputPanel style="display:none">
-                        <p:graphicImage name="/demo/images/imagem1.png" />
-                        <p:graphicImage name="/demo/images/imagem1.png" />
-                        <p:graphicImage name="/demo/images/imagem1.png" />
-                        <p:graphicImage name="/demo/images/imagem1.png" />
-                    </p:outputPanel>
-	-->
+   	 			<p:growl id="growl" showDetail="true" />
+			    <p:gmap id="gmap" center="-28.952962, -49.471081" zoom="13" type="HYBRID" model="#{marcaResidencia.simpleModel}"  style="width:100%;height:400px">
+        			<p:ajax event="overlaySelect" listener="#{mapaBean.onMarkerSelect}" update="growl" />
+    			</p:gmap>
 			</h:form>
-
-
-		</ui:define>
+			</ui:define>
 	</ui:composition>
-
-
-
-</body>
+	
 </html>
-
 

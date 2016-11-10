@@ -61,7 +61,14 @@ public class MapaBean implements Serializable {
 	}
 
 	public void info() throws IOException {
-		FacesContext.getCurrentInstance().getExternalContext().redirect("consumidor.jsf");
+		String id = marker.getTitle();
+		//String id = marker.getId();
+		
+		Consumidor c = (Consumidor) marker.getData();
+		id = c.getId().toString();
+		
+		FacesContext.getCurrentInstance().getExternalContext()
+		.redirect("pages/tabelaDados.jsf?id=" + id);
 	}
 
 	
@@ -74,25 +81,31 @@ public class MapaBean implements Serializable {
 		int i;
 		LatLng coord;
 		String s;
-
+		Marker m;
+		
+		
 		for (i = 0; i < lista.size(); i++) {
 			coord = new LatLng(lista.get(i).getLatitude(), lista.get(i).getLongitude());
-			// simpleModel.addOverlay(new Marker(coord,
-			// lista.get(i).getDescricao()));
 
 			if (lista.get(i).isSuspeitaFraude()) {
-				s = "http://maps.google.com/mapfiles/ms/micons/red-dot.png";
+				s = "faces/imagens/red-dot.png";
 			} else {
-				s = "http://maps.google.com/mapfiles/ms/micons/green-dot.png";
+				s = "faces/imagens/green-dot.png";
 			}
-
-			simpleModel.addOverlay(new Marker(coord, lista.get(i).getDescricao(), "imagem1.png", s));
+			
+			m = new Marker(coord);
+			m.setTitle(lista.get(i).getDescricao());
+			m.setData(lista.get(i));
+			m.setIcon(s);	
+			//m.setId( lista.get(i).getId().toString() );
+			
+			simpleModel.addOverlay(m);
+			
 		}
 	}
 	
 	public void mapaInd() {
 		simpleModel.getMarkers().clear();
-		
 
 	}
 	

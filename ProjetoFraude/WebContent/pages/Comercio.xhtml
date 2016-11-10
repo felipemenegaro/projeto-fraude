@@ -9,9 +9,12 @@
 	<ui:composition template="/Templates/modeloGeral.xhtml">
 		<ui:define name="conteudo">
 			<h:form>
-                <p:gmap center="-28.952962, -49.471081" zoom="13" type="HYBRID" style="width:100%;height:400px" model="#{markersView.simpleModel}" />
+   	 			<p:growl id="growl" showDetail="true" />
+			    <p:gmap id="gmap" center="-28.952962, -49.471081" zoom="13" type="HYBRID" model="#{marcaComercio.simpleModel}"  style="width:100%;height:400px">
+        			<p:ajax event="overlaySelect" listener="#{mapaBean.onMarkerSelect}" update="growl" />
+    			</p:gmap>
 			</h:form>
-		</ui:define>
+			</ui:define>
 	</ui:composition>
 	
 </html>

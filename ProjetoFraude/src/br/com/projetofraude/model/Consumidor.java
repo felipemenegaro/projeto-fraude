@@ -127,4 +127,16 @@ public class Consumidor implements Serializable{
 
     }
 
+
+	@Override
+	public String toString() {
+		return " ID = " + id +
+				"\n Descricao = " + descricao +
+				"\n Tipo = " + tipo +
+				"\n Endereço = " + endereço + 
+				"\n suspeitaFraude = " + suspeitaFraude;
+	}
+	
+	
+
 }
