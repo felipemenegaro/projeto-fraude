@@ -20,17 +20,11 @@
 			<h:form>
 				<p:growl id="growl" life="2000" />
     
-		    	<p:commandButton value="Comércio" 	id="btComercio" 
-		    	actionListener="#{mapaBean.mapaInd}"  />
-			 
-			    <p:commandButton value="Residências" id="btResidencia" 
-			    actionListener="#{mapaBean.mapaInd}" />
-			 
-			    <p:commandButton value="Indústria" 	id="btIndustria" 
-			    actionListener="#{mapaBean.mapaInd}" />
-		
-	
-			    
+    			<!-- 
+		    	<p:commandButton value="Comércio" 	id="btComercio"    actionListener="#"  /> 
+			    <p:commandButton value="Residências" id="btResidencia" actionListener="#" />
+			    <p:commandButton value="Indústria" 	id="btIndustria"   actionListener="#" />
+				-->
 	    
 	    
 				<p:gmap id="gmap" center="-28.943,-49.48" zoom="13" type="ROADMAP"
@@ -39,28 +33,17 @@
 					<p:ajax event="overlaySelect" listener="#{mapaBean.onMarkerSelect}" />
 
 					<p:gmapInfoWindow id="infoWindow">
-						
-						<p:outputPanel
-							style="text-align: center; display: block; margin: auto">
-
-							
+						<p:outputPanel style="text-align: left; display: block; margin: auto">
 							<pre>
 							<h:outputText value="#{mapaBean.marker.data}" />
 							</pre>
-									
-							
 							<p:commandButton value="Mais informações" actionListener="#{mapaBean.info}" />
-
 						</p:outputPanel>
-					
 					</p:gmapInfoWindow>
+					
 				</p:gmap>
-
-
-
-				
+		
 			</h:form>
-
 
 		</ui:define>
 	</ui:composition>

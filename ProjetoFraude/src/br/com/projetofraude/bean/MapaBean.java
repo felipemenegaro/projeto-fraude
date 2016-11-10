@@ -27,7 +27,6 @@ public class MapaBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private MapModel simpleModel;
 	private ConsumidorDao consumidorDao = new ConsumidorDao();
-	//private MapModel advancedModel;
 	private Marker marker;
 
 	public MapaBean() {
@@ -35,54 +34,28 @@ public class MapaBean implements Serializable {
 	
 	@PostConstruct
 	public void init() {
-		//advancedModel = new DefaultMapModel();
 		simpleModel = new DefaultMapModel();
-		
 		insereMarcadores();
-	}
-
-	
-
-	public MapModel getAdvancedModel() {
-		// return advancedModel;
-		return simpleModel;
-	}
-
-	public MapModel getSimpleModel() {
-		return simpleModel;
 	}
 
 	public void onMarkerSelect(OverlaySelectEvent event) {
 		marker = (Marker) event.getOverlay();
 	}
 
-	public Marker getMarker() {
-		return marker;
-	}
-
 	public void info() throws IOException {
-		String id = marker.getTitle();
-		//String id = marker.getId();
-		
 		Consumidor c = (Consumidor) marker.getData();
-		id = c.getId().toString();
-		
-		FacesContext.getCurrentInstance().getExternalContext()
-		.redirect("pages/tabelaDados.jsf?id=" + id);
+		String id = c.getId().toString();
+		FacesContext.getCurrentInstance().getExternalContext().redirect("pages/tabelaDados.jsf?id=" + id);
 	}
-
 	
 	public void insereMarcadores() {
-		List<Consumidor> lista = new ArrayList<Consumidor>();// =
-																// consumidorDao.getListaConsumidores();
-
+		List<Consumidor> lista = new ArrayList<Consumidor>();
 		lista = consumidorDao.getListaConsumidores();
 
 		int i;
 		LatLng coord;
 		String s;
 		Marker m;
-		
 		
 		for (i = 0; i < lista.size(); i++) {
 			coord = new LatLng(lista.get(i).getLatitude(), lista.get(i).getLongitude());
@@ -99,14 +72,16 @@ public class MapaBean implements Serializable {
 			m.setIcon(s);	
 			//m.setId( lista.get(i).getId().toString() );
 			
-			simpleModel.addOverlay(m);
-			
+			simpleModel.addOverlay(m);	
 		}
 	}
-	
-	public void mapaInd() {
-		simpleModel.getMarkers().clear();
 
+	public MapModel getSimpleModel() {
+		return simpleModel;
+	}	
+
+	public Marker getMarker() {
+		return marker;
 	}
 	
 }

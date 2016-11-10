@@ -28,34 +28,30 @@ import br.com.projetofraude.model.DadosConsumo;
 @RequestScoped
 public class ChartView implements Serializable {
  
-	
-	private Integer id;
-	
-    public Integer getId() {
-		return id;
-	}
-
-
 	private LineChartModel lineModel1;
     //private LineChartModel lineModel2;
     private LineChartModel areaModel;
     private LineChartModel dateModel;
-    
-    
-    List<DadosConsumo> lista;
+    private List<DadosConsumo> lista;
     private DadosConsumo temp = new DadosConsumo();
     private DadosConsumoDao dadosDao = new DadosConsumoDao();
-    
     private Consumidor consumidor;
     private ConsumidorDao consumidorDao = new ConsumidorDao();
-
+    private Integer id;
+	
+    
     @PostConstruct
     public void init() {
         id = Integer.valueOf( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id") );       
         consumidor = consumidorDao.buscaConsumidorID(id);
         createDateModel();
+        //createLineModels();
     }
- 
+    
+    public Integer getId() {
+		return id;
+	}
+    
     public LineChartModel getLineModel1() {
         return lineModel1;
     }
@@ -80,20 +76,14 @@ public class ChartView implements Serializable {
     */
     
     private void createLineModels() {
-    	
         lineModel1 = initLinearModel();
-        
         lineModel1.setShowPointLabels(false);
-        lineModel1.setStacked(false);
-       
-        
+        lineModel1.setStacked(false);      
         
         lineModel1.setTitle("Linear Chart");
         lineModel1.setLegendPosition("e");
         Axis yAxis = lineModel1.getAxis(AxisType.Y);
         Axis xAxis = lineModel1.getAxis(AxisType.X);
-       
-
         
         yAxis.setMin(0);
         yAxis.setMax(20);
@@ -113,52 +103,27 @@ public class ChartView implements Serializable {
     private LineChartModel initLinearModel() {
     	
         LineChartModel model = new LineChartModel();
- 
         LineChartSeries series1 = new LineChartSeries();
         //series1.setLabel("Series 1");
         
         lista = dadosDao.getListaIntervaloDadosConsumoPorConsumidor(10, 
         		new Date(2016-1900, 9, 1, 0, 0), new Date(2016-1900, 9, 2, 0, 0));
 
-
         for(int i = 0; i < lista.size(); i++){
-        	System.out.println(lista.get(i).getValor());
+        	//System.out.println(lista.get(i).getValor());
         	series1.set(i, lista.get(i).getValor());
         }
         
-        
         model.addSeries(series1);
-      
         return model;
     }
     
-    
- 
-    
-    
-    
-  
-     
     private void createAreaModel() {
         areaModel = new LineChartModel();
  
-        LineChartSeries boys = new LineChartSeries();
-        boys.setFill(false);
-        boys.setLabel("Boys");
-        
-        boys.setShowMarker(false);
-        /*
-        boys.set("2004", 120);
-        boys.set("2005", 100);
-        boys.set("2006", 44);
-        boys.set("2007", 150);
-        boys.set("2008", 25);
-        boys.set("2009", 120);
-        boys.set("2010", 100);
-        boys.set("2011", 44);
-        boys.set("2012", 150);
-        boys.set("2013", 25);
-        */
+        LineChartSeries dados = new LineChartSeries();
+        dados.setFill(false);
+        dados.setLabel("Dados");
         
         Integer j = 10;
         
@@ -169,43 +134,29 @@ public class ChartView implements Serializable {
         	}else{
             	j = j + 1;
         	}
-        	
-        	boys.set(i, j);
-        	
+        	dados.set(i, j);
         }
     
-        areaModel.addSeries(boys);
-        //areaModel.addSeries(girls);
-         
+        areaModel.addSeries(dados);
         areaModel.setTitle("Area Chart");
         areaModel.setLegendPosition("ne");
-        
         areaModel.setStacked(true);
         areaModel.setShowPointLabels(false);
         areaModel.setShadow(false);
         areaModel.setZoom(true);
         
- 
-        
         //Axis xAxis = new CategoryAxis("Years");
-        
         //areaModel.getAxes().put(AxisType.X, xAxis);
-        
-        
         Axis xAxis = areaModel.getAxis(AxisType.X);
-        
         xAxis.setLabel("Years");
         xAxis.setMin(0);
         xAxis.setMax(300);
         xAxis.setTickInterval("10");
         xAxis.setTickCount(10);
-        
         Axis yAxis = areaModel.getAxis(AxisType.Y);
-        
         yAxis.setLabel("Births");
         yAxis.setMin(0);
         yAxis.setMax(300);
-        
     }
     
     
@@ -214,6 +165,8 @@ public class ChartView implements Serializable {
         LineChartSeries series1 = new LineChartSeries();
         
         series1.setLabel("Series 1");
+        series1.setShowMarker(false);
+        series1.setFill(false);
         
         series1.set("2014-01-01 08:00:00", 51);
         series1.set("2014-01-01 08:30:00", 22);
