@@ -5,7 +5,6 @@ import br.com.projetofraude.model.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -37,20 +36,10 @@ public class MapaBean implements Serializable {
 		simpleModel = new DefaultMapModel();
 		insereMarcadores();
 	}
-
-	public void onMarkerSelect(OverlaySelectEvent event) {
-		marker = (Marker) event.getOverlay();
-	}
-
-	public void info() throws IOException {
-		Consumidor c = (Consumidor) marker.getData();
-		String id = c.getId().toString();
-		FacesContext.getCurrentInstance().getExternalContext().redirect("pages/tabelaDados.jsf?id=" + id);
-	}
 	
 	public void insereMarcadores() {
-		List<Consumidor> lista = new ArrayList<Consumidor>();
-		lista = consumidorDao.getListaConsumidores();
+		
+		List<Consumidor> lista = consumidorDao.getListaConsumidores();
 
 		int i;
 		LatLng coord;
@@ -58,22 +47,35 @@ public class MapaBean implements Serializable {
 		Marker m;
 		
 		for (i = 0; i < lista.size(); i++) {
-			coord = new LatLng(lista.get(i).getLatitude(), lista.get(i).getLongitude());
-
+			
+			coord = new LatLng(lista.get(i).getLatitude(), lista.get(i).getLongitude());			
+			
 			if (lista.get(i).isSuspeitaFraude()) {
-				s = "faces/imagens/red-dot.png";
+				s = "faces/imagens/residencial-red.png";
 			} else {
-				s = "faces/imagens/green-dot.png";
+				s = "faces/imagens/residencial-green.png";
 			}
 			
 			m = new Marker(coord);
 			m.setTitle(lista.get(i).getDescricao());
 			m.setData(lista.get(i));
 			m.setIcon(s);	
-			//m.setId( lista.get(i).getId().toString() );
 			
 			simpleModel.addOverlay(m);	
 		}
+	}
+	
+	public void onMarkerSelect(OverlaySelectEvent event) {
+		marker = (Marker) event.getOverlay();
+	}
+
+	public void info() throws IOException {
+		
+		Consumidor c = (Consumidor) marker.getData();
+		
+		String id = c.getId().toString();
+		
+		FacesContext.getCurrentInstance().getExternalContext().redirect("pages/tabelaDados.jsf?id=" + id);
 	}
 
 	public MapModel getSimpleModel() {

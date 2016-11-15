@@ -42,7 +42,9 @@ public class ChartView implements Serializable {
     
     @PostConstruct
     public void init() {
+    	
         id = Integer.valueOf( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id") );       
+        
         consumidor = consumidorDao.buscaConsumidorID(id);
         createDateModel();
         //createLineModels();

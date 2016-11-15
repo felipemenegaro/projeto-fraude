@@ -1,4 +1,5 @@
-package br.com.projetofraude.util;
+package br.com.projetofraude.main;
+
 
 import java.util.Calendar;
 import java.util.Date;
@@ -10,18 +11,20 @@ import org.hibernate.Transaction;
 import br.com.projetofraude.dao.*;
 import br.com.projetofraude.model.DadosConsumo;
 
-public class Initializer {
-	
-  public static void main(String[] args) {
-    
-	  /*
-	    DadosConsumoDao dados_dao = new DadosConsumoDao();
-    	DadosConsumo dados = new DadosConsumo();
-    	dados.setId_consumidor(10);
-    	dados.setValor(12);
-    	
-    	dados.setData_hora(new Date(2016-1900, 9, 2, 0, 0));
-    	
+
+public class Teste {
+
+	public static void main(String[] args) {
+		/*
+		DadosConsumoDao dados_dao = new DadosConsumoDao();
+		
+		DadosConsumo dados = new DadosConsumo();
+		
+		dados.setId_consumidor(14);
+		dados.setValor(12);
+		
+		dados.setData_hora(new Date(2013-1900, 9, 2, 0, 0));
+		
 	    for(int j = 0; j < 24; j++){
 	    	
 	    	dados.getData_hora().setHours(j);
@@ -33,10 +36,12 @@ public class Initializer {
 		    	
 		    	
 		    }
-  
+
 	    }
-*/
+	    */
 	    
 	    
-  }
+
+	}
+
 }

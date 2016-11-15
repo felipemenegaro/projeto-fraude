@@ -1,13 +1,15 @@
 package br.com.projetofraude.bean;
 
+import br.com.projetofraude.model.*;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 
 import org.primefaces.event.map.OverlaySelectEvent;
 import org.primefaces.model.map.DefaultMapModel;
@@ -16,42 +18,121 @@ import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 
 import br.com.projetofraude.dao.ConsumidorDao;
-import br.com.projetofraude.model.Consumidor;
 
 @ManagedBean
-
+@ViewScoped
 public class MarkersView implements Serializable {
    
 	private static final long serialVersionUID = 1L;
-	private MapModel simpleModel;
-	
+	private MapModel simpleModel, mapaComercio, mapaResidencias, mapaIndustria;
+	private ConsumidorDao consumidorDao = new ConsumidorDao();
 	private Marker marker;
 	
+	public MarkersView(){	
+	}
+	
     @PostConstruct
-    public void init() {
+    public void init() {																				
     	simpleModel = new DefaultMapModel();
-    	ConsumidorDao dao = new ConsumidorDao();
-    	List<Consumidor> consumidores = dao.getListaConsumidores();
+    	mapaComercio = new DefaultMapModel();
+    	mapaIndustria = new DefaultMapModel();
+    	mapaResidencias = new DefaultMapModel();
     	
-        for(Consumidor consumidor : consumidores){
-    		LatLng coord1 = new LatLng(consumidor.getLatitude(), consumidor.getLongitude());
-	        simpleModel.addOverlay(new Marker(coord1, consumidor.getDescricao()));
-        }
+    	insereMarcadores();	
     }
-    
- 
+  
+	public void insereMarcadores() {
+		
+    	List<Consumidor> lista = consumidorDao.getListaConsumidores();
+
+    	int i;
+		LatLng coord;
+		String s = null;
+		Marker m;
+		
+		for (i = 0; i < lista.size(); i++) {
+			
+			coord = new LatLng(lista.get(i).getLatitude(), lista.get(i).getLongitude());			
+			
+			m = new Marker(coord);
+			m.setTitle(lista.get(i).getDescricao());
+			m.setData(lista.get(i));
+			
+			boolean f = lista.get(i).isSuspeitaFraude();
+			
+			if(lista.get(i).getTipo().toString() == "RESIDENCIAL"){
+				if (f) {
+					s = "../imagens/residencial-red.png";
+				} else {
+					s = "../imagens/residencial-green.png";
+				}
+				m.setIcon(s);
+				mapaResidencias.addOverlay(m);
+			}else if(lista.get(i).getTipo().toString() == "COMERCIAL"){
+				if (f) {
+					s = "../imagens/comercial-red.png";
+				} else {
+					s = "../imagens/comercial-green.png";
+				}
+				m.setIcon(s);
+				mapaComercio.addOverlay(m);
+			}else if(lista.get(i).getTipo().toString() == "INDUSTRIAL"){
+				if (f) {
+					s = "../imagens/industrial-red.png";
+				} else {
+					s = "../imagens/industrial-green.png";
+				}
+				m.setIcon(s);
+				mapaIndustria.addOverlay(m);
+			}
+
+			
+			simpleModel.addOverlay(m);
+		}
+	}
+	
+	public void onMarkerSelect(OverlaySelectEvent event) {
+		marker = (Marker) event.getOverlay();
+	}
+	
+	public void info() throws IOException {
+		
+		Consumidor c = (Consumidor) marker.getData();
+		
+		String id = c.getId().toString();
+		
+		FacesContext.getCurrentInstance().getExternalContext().redirect("/Projeto/pages/tabelaDados.jsf?id=" + id);
+	}
+	
     public MapModel getSimpleModel() {
         return simpleModel;
     }
-      
-    public void onMarkerSelect(OverlaySelectEvent event) {
-        marker = (Marker) event.getOverlay();
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Marker Selected", marker.getTitle()));
-    }
-
     
     public Marker getMarker() {
         return marker;
     }
+
+	public MapModel getMapaComercio() {
+		return mapaComercio;
+	}
+
+	public MapModel getMapaResidencias() {
+		return mapaResidencias;
+	}
+
+	public MapModel getMapaIndustria() {
+		return mapaIndustria;
+	}
+	
+	public void comercio(){
+		List<Marker> lista = simpleModel.getMarkers();
+		for (int i = 0; i < lista.size(); i++) {
+			
+			lista.get(i).setVisible(false);	
+		
+		}
+	}
+    
+    
     
 }
