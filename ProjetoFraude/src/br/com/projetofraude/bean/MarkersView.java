@@ -57,7 +57,25 @@ public class MarkersView implements Serializable {
 			m = new Marker(coord);
 			m.setTitle(lista.get(i).getDescricao());
 			m.setData(lista.get(i));
+		
 			
+			if (lista.get(i).isSuspeitaFraude()) {
+				s = "../imagens/red-dot.png";
+			} else {
+				s = "../imagens/green-dot.png";
+			}
+			m.setIcon(s);
+			
+			if(lista.get(i).getTipo().toString() == "RESIDENCIAL"){	
+				mapaResidencias.addOverlay(m);
+			}else if(lista.get(i).getTipo().toString() == "COMERCIAL"){
+				mapaComercio.addOverlay(m);
+			}else if(lista.get(i).getTipo().toString() == "INDUSTRIAL"){
+				mapaIndustria.addOverlay(m);
+			}
+			
+			
+			/*		 
 			boolean f = lista.get(i).isSuspeitaFraude();
 			
 			if(lista.get(i).getTipo().toString() == "RESIDENCIAL"){
@@ -85,7 +103,7 @@ public class MarkersView implements Serializable {
 				m.setIcon(s);
 				mapaIndustria.addOverlay(m);
 			}
-
+			 */
 			
 			simpleModel.addOverlay(m);
 		}
@@ -123,7 +141,7 @@ public class MarkersView implements Serializable {
 	public MapModel getMapaIndustria() {
 		return mapaIndustria;
 	}
-	
+	/*
 	public void comercio(){
 		List<Marker> lista = simpleModel.getMarkers();
 		for (int i = 0; i < lista.size(); i++) {
@@ -132,7 +150,7 @@ public class MarkersView implements Serializable {
 		
 		}
 	}
-    
+    */
     
     
 }

@@ -13,11 +13,6 @@
 
 <body>
 
-<f:metadata>
-    <f:viewParam name="id" value="#{chartView.id}" />
-</f:metadata>
-
-
 <ui:composition template="/Templates/modeloGeral.xhtml">
 	<ui:define name="conteudo">
 		
@@ -35,31 +30,20 @@
 		
 		<br/><br/>
 		
-		<h:outputText value="Consumo diário:" />
-        <br/><br/> 
-        
-        
         <h:form id="form">
-    	 <p:growl id="msgs" showDetail="true" />  
-
+    	<p:growl id="msgs" showDetail="true" />  
     	 
-	        <h:outputText value="De:" />
-	        <p:calendar id="datetime1" value="#{chartView.dataInicio}" pattern="yyyy-MM-dd HH:mm:ss" />  
-	        
-	        <h:outputText value="Até:" />
-	        <p:calendar id="datetime2" value="#{chartView.dataFim}" pattern="yyyy-MM-dd HH:mm:ss" />  
-	        
-	                       
-	    	<p:commandButton value="OK" actionListener="#{chartView.click()}" icon="ui-icon-check"
-	    	ajax="true" update="graficoConsumo" />	        
-	               
-		 
-		  	<p:chart id="graficoConsumo" type="line" model="#{chartView.dateModel}" style="height:300px;" />
-		  	
+	        <p:outputLabel for="datetime" value="Datetime:" />
+	        <p:calendar id="datetime" value="#{chartView.date10}" pattern="yyyy-MM-dd HH:mm:ss" />              
+	         
+	         <p:commandButton value="Submit" update="msgs" actionListener="#{chartView.click}" icon="ui-icon-check" />
+	         
+	         
+		    
 		</h:form>
 		
 		
-		
+		<p:chart type="line" model="#{chartView.dateModel}" style="height:300px;" />
 	
 			
 			

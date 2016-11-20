@@ -1,15 +1,21 @@
 package br.com.projetofraude.bean;
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.CategoryAxis;
@@ -25,7 +31,7 @@ import br.com.projetofraude.model.DadosConsumo;
  
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ChartView implements Serializable {
  
 	private LineChartModel lineModel1;
@@ -39,6 +45,10 @@ public class ChartView implements Serializable {
     private ConsumidorDao consumidorDao = new ConsumidorDao();
     private Integer id;
 	
+    private Date dataInicio;
+    private Date dataFim;
+    
+    private Calendar cInicio, cFim;
     
     @PostConstruct
     public void init() {
@@ -50,17 +60,136 @@ public class ChartView implements Serializable {
         //createLineModels();
     }
     
+
+    
+    private void createDateModel() {
+        dateModel = new LineChartModel();
+        LineChartSeries series1 = new LineChartSeries();
+        int id_c = 14;
+        
+        Calendar c, c2;
+        
+        c = Calendar.getInstance();
+        c2 = Calendar.getInstance();
+        
+		c.set(Calendar.YEAR, 1999);
+        c.set(Calendar.MONTH, 9);
+        c.set(Calendar.DAY_OF_MONTH, 25);
+        c.set(Calendar.HOUR_OF_DAY, 00);
+        c.set(Calendar.MINUTE, 00);
+        c.set(Calendar.SECOND, 00);
+        
+        c2.set(Calendar.YEAR, 1999);
+        c2.set(Calendar.MONTH, 9);
+        c2.set(Calendar.DAY_OF_MONTH, 27);
+        c2.set(Calendar.HOUR_OF_DAY, 23);
+        c2.set(Calendar.MINUTE, 59);
+        c2.set(Calendar.SECOND, 59);
+        
+        
+        lista = dadosDao.getListaIntervaloDadosConsumoPorConsumidor(id_c, c.getTime(), c2.getTime() );
+        
+        String s;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        
+        for(int i = 0; i < lista.size(); i++){
+        	
+        	
+            s = sdf.format(lista.get(i).getData_hora()) ;
+            
+        	series1.set( s , lista.get(i).getValor() );
+        }
+        
+        
+        series1.setLabel("Series 1");
+        series1.setShowMarker(false);
+        series1.setFill(false);
+        /*
+        series1.set("2014-01-01 08:00:00", 51);
+        series1.set("2014-01-01 08:30:00", 22);
+        series1.set("2014-01-01 10:20:00", 65);
+        series1.set("2014-01-01 15:10:00", 35);
+        */
+        dateModel.addSeries(series1);
+        //dateModel.setTitle("Area Chart");
+        //dateModel.setLegendPosition("ne");
+        //dateModel.setStacked(true);
+        //dateModel.setShowPointLabels(false);
+       ///dateModel.setShadow(false);
+        //dateModel.setZoom(false);
+        
+        
+        
+        dateModel.getAxis(AxisType.Y).setLabel("Values");
+        
+        DateAxis axis = new DateAxis("Dates");  // x
+        axis.setTickAngle(-50);
+        /*
+        axis.setMin("2014-01-01 00:00:00");
+        axis.setMax("2014-01-01 23:59:00");
+        */
+        axis.setTickFormat("%H:%M:%S");
+        dateModel.getAxes().put(AxisType.X, axis);
+    }
+    
+    
+    public void onDateSelect(SelectEvent event) {
+    	
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        //facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
+        System.out.println("teste2 " + format.format(event.getObject()));
+    }
+     
+    public void click() {        
+        System.out.println("teste1" + dataInicio.toString());
+        LineChartSeries series1 = new LineChartSeries();
+        
+        dateModel = new LineChartModel();
+        
+        lista = dadosDao.getListaIntervaloDadosConsumoPorConsumidor(id, dataInicio, dataFim );
+        
+        String s;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        
+        for(int i = 0; i < lista.size(); i++){
+        	
+        	
+            s = sdf.format(lista.get(i).getData_hora()) ;
+            
+        	series1.set( s , lista.get(i).getValor() );
+        }
+        
+        
+        series1.setLabel("Series 1");
+        series1.setShowMarker(false);
+        series1.setFill(false);
+        
+        dateModel.addSeries(series1);
+        
+        dateModel.getAxis(AxisType.Y).setLabel("Values");
+        
+        DateAxis axis = new DateAxis("Dates");  // x
+        axis.setTickAngle(-50);
+        /*
+        axis.setMin("2014-01-01 00:00:00");
+        axis.setMax("2014-01-01 23:59:00");
+        */
+        axis.setTickFormat("%H:%M:%S");
+        dateModel.getAxes().put(AxisType.X, axis);
+    }
+    
+    
+    
     public Integer getId() {
 		return id;
 	}
     
-    public LineChartModel getLineModel1() {
-        return lineModel1;
-    }
- 
-    public LineChartModel getAreaModel() {
-        return areaModel;
-    }
+    public void setId(Integer id) {
+		this.id = id;
+	}
     
     public LineChartModel getDateModel() {
         return dateModel;
@@ -70,123 +199,20 @@ public class ChartView implements Serializable {
     	return consumidor;
     }
     
-    
- /*
-    public LineChartModel getLineModel2() {
-        return lineModel2;
+    public Date getDataInicio() {
+        return dataInicio;
     }
-    */
-    
-    private void createLineModels() {
-        lineModel1 = initLinearModel();
-        lineModel1.setShowPointLabels(false);
-        lineModel1.setStacked(false);      
-        
-        lineModel1.setTitle("Linear Chart");
-        lineModel1.setLegendPosition("e");
-        Axis yAxis = lineModel1.getAxis(AxisType.Y);
-        Axis xAxis = lineModel1.getAxis(AxisType.X);
-        
-        yAxis.setMin(0);
-        yAxis.setMax(20);
-         /*
-        lineModel2 = initCategoryModel();
-        lineModel2.setTitle("Category Chart");
-        lineModel2.setLegendPosition("e");
-        lineModel2.setShowPointLabels(true);
-        lineModel2.getAxes().put(AxisType.X, new CategoryAxis("Years"));
-        yAxis = lineModel2.getAxis(AxisType.Y);
-        yAxis.setLabel("Births");
-        yAxis.setMin(0);
-        yAxis.setMax(200);
-        */
-    }
-     
-    private LineChartModel initLinearModel() {
-    	
-        LineChartModel model = new LineChartModel();
-        LineChartSeries series1 = new LineChartSeries();
-        //series1.setLabel("Series 1");
-        
-        lista = dadosDao.getListaIntervaloDadosConsumoPorConsumidor(10, 
-        		new Date(2016-1900, 9, 1, 0, 0), new Date(2016-1900, 9, 2, 0, 0));
-
-        for(int i = 0; i < lista.size(); i++){
-        	//System.out.println(lista.get(i).getValor());
-        	series1.set(i, lista.get(i).getValor());
-        }
-        
-        model.addSeries(series1);
-        return model;
-    }
-    
-    private void createAreaModel() {
-        areaModel = new LineChartModel();
  
-        LineChartSeries dados = new LineChartSeries();
-        dados.setFill(false);
-        dados.setLabel("Dados");
-        
-        Integer j = 10;
-        
-        for(int i = 0; i < 300; i++){
-        	
-        	if(j > 20){
-        		j = 10;
-        	}else{
-            	j = j + 1;
-        	}
-        	dados.set(i, j);
-        }
-    
-        areaModel.addSeries(dados);
-        areaModel.setTitle("Area Chart");
-        areaModel.setLegendPosition("ne");
-        areaModel.setStacked(true);
-        areaModel.setShowPointLabels(false);
-        areaModel.setShadow(false);
-        areaModel.setZoom(true);
-        
-        //Axis xAxis = new CategoryAxis("Years");
-        //areaModel.getAxes().put(AxisType.X, xAxis);
-        Axis xAxis = areaModel.getAxis(AxisType.X);
-        xAxis.setLabel("Years");
-        xAxis.setMin(0);
-        xAxis.setMax(300);
-        xAxis.setTickInterval("10");
-        xAxis.setTickCount(10);
-        Axis yAxis = areaModel.getAxis(AxisType.Y);
-        yAxis.setLabel("Births");
-        yAxis.setMin(0);
-        yAxis.setMax(300);
+    public void setDataInicio(Date dataInicio) {
+        this.dataInicio = dataInicio;
     }
     
-    
-    private void createDateModel() {
-        dateModel = new LineChartModel();
-        LineChartSeries series1 = new LineChartSeries();
-        
-        series1.setLabel("Series 1");
-        series1.setShowMarker(false);
-        series1.setFill(false);
-        
-        series1.set("2014-01-01 08:00:00", 51);
-        series1.set("2014-01-01 08:30:00", 22);
-        series1.set("2014-01-01 10:20:00", 65);
-        series1.set("2014-01-01 15:10:00", 35);
-        
-        dateModel.addSeries(series1);
-        dateModel.getAxis(AxisType.Y).setLabel("Values");
-        
-        DateAxis axis = new DateAxis("Dates");
-        axis.setTickAngle(-50);
-        
-        axis.setMin("2014-01-01 00:00:00");
-        
-        axis.setMax("2014-01-01 23:59:00");
-        
-        axis.setTickFormat("%H:%M:%S");
-        dateModel.getAxes().put(AxisType.X, axis);
+    public Date getDataFim() {
+        return dataFim;
+    }
+ 
+    public void setDataFim(Date dataFim) {
+        this.dataFim = dataFim;
     }
  
 }
