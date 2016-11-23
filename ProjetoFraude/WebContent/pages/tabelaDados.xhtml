@@ -21,6 +21,7 @@
 <ui:composition template="/Templates/modeloGeral.xhtml">
 	<ui:define name="conteudo">
 		
+		<h3 style="margin-top:0">Dados do cliente</h3>
 		
 		<h:panelGrid columns="2">
                 
@@ -35,26 +36,84 @@
 		
 		<br/><br/>
 		
-		<h:outputText value="Consumo diário:" />
-        <br/><br/> 
+		
+        <h3 style="margin-top:0">Dados de Consumo</h3>
         
         
         <h:form id="form">
-    	 <p:growl id="msgs" showDetail="true" />  
+    	 	<p:growl id="msgs" showDetail="true" />  
 
-    	 
-	        <h:outputText value="De:" />
-	        <p:calendar id="datetime1" value="#{chartView.dataInicio}" pattern="yyyy-MM-dd HH:mm:ss" />  
-	        
-	        <h:outputText value="Até:" />
-	        <p:calendar id="datetime2" value="#{chartView.dataFim}" pattern="yyyy-MM-dd HH:mm:ss" />  
-	        
-	                       
-	    	<p:commandButton value="OK" actionListener="#{chartView.click()}" icon="ui-icon-check"
-	    	ajax="true" update="graficoConsumo" />	        
-	               
-		 
-		  	<p:chart id="graficoConsumo" type="line" model="#{chartView.dateModel}" style="height:300px;" />
+			<p:tabView>
+				<p:tab title="Diário">
+
+		    	 	<br/> 		        	
+	        	
+		        	<p:commandButton actionListener="#{chartView.botaoDiaAnterior()}" icon="ui-icon-arrow-1-w"
+			    	ajax="true" update="graficoConsumoDia" />
+		    	 
+		    	 	<p:calendar id="diario" value="#{chartView.dia}" pattern="yyyy-MM-dd" >
+				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoDia}" update="graficoConsumoDia, @this"/>
+				  	</p:calendar>
+				  	
+				  	<p:commandButton actionListener="#{chartView.botaoDiaSeguinte()}" icon="ui-icon-arrow-1-e"
+			    	ajax="true" update="graficoConsumoDia" />
+				  	
+				  	<p:chart id="graficoConsumoDia" type="line" model="#{chartView.graficoDiario}" style="height:300px;" />
+				  	
+			  	</p:tab>
+        		<p:tab title="Semanal" > 	
+			  	
+				  	<br/>
+				  	
+				  	<p:commandButton actionListener="#{chartView.botaoSemanaAnterior()}" icon="ui-icon-arrow-1-w"
+			    	ajax="true" update="graficoConsumoSemana" />
+			    	
+				  	<p:calendar id="semanal" value="#{chartView.semana}" showWeek="true" pattern="yyyy-MM-dd" >
+				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoSemana}" update="graficoConsumoSemana"/>
+				  	</p:calendar>
+				  	
+				  	<p:commandButton actionListener="#{chartView.botaoSemanaSeguinte()}" icon="ui-icon-arrow-1-e"
+			    	ajax="true" update="graficoConsumoSemana" />
+				  	
+				  	<p:chart id="graficoConsumoSemana" type="line" model="#{chartView.graficoSemanal}" style="height:300px;" />
+				  	
+			  	</p:tab>
+        		<p:tab title="Mensal">
+			  	
+				  	<br/>
+		        	
+				  	<p:commandButton actionListener="#{chartView.botaoMesAnterior()}" icon="ui-icon-arrow-1-w"
+			    	ajax="true" update="graficoConsumoMes" />
+			    	
+				  	<p:calendar id="mensal" value="#{chartView.mes}" pattern="yyyy-MM-dd" >
+				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoMes}" update="graficoConsumoMes,mensal"/>
+				  	</p:calendar>
+				  	
+				  	<p:commandButton actionListener="#{chartView.botaoMesSeguinte()}" icon="ui-icon-arrow-1-e"
+			    	ajax="true" update="graficoConsumoMes" />
+				  	
+				  	<p:chart id="graficoConsumoMes" type="line" model="#{chartView.graficoMensal}" style="height:300px;" />
+				  	
+			  	</p:tab>
+        		<p:tab title="Intervalo">
+  	
+				  	<br/>
+				  	
+			        <h:outputText value="De:" />
+			        <p:calendar id="datetime1" value="#{chartView.dataInicio}" pattern="yyyy-MM-dd HH:mm:ss" />  
+			        
+			        <h:outputText value="Até:" />
+			        <p:calendar id="datetime2" value="#{chartView.dataFim}" pattern="yyyy-MM-dd HH:mm:ss" />  
+			                       
+			    	<p:commandButton value="OK" actionListener="#{chartView.click()}"
+			    	ajax="true" update="graficoConsumo" />	          
+				 
+				  	<p:chart id="graficoConsumo" type="line" model="#{chartView.graficoDiario}" style="height:300px;" />
+				 
+				 </p:tab>
+		  	
+		  	
+		  	</p:tabView>
 		  	
 		</h:form>
 		

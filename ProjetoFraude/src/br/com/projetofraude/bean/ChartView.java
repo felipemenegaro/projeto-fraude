@@ -28,16 +28,19 @@ import br.com.projetofraude.dao.ConsumidorDao;
 import br.com.projetofraude.dao.DadosConsumoDao;
 import br.com.projetofraude.model.Consumidor;
 import br.com.projetofraude.model.DadosConsumo;
+import br.com.projetofraude.util.Grafico;
  
 
+@SuppressWarnings("serial")
 @ManagedBean
 @ViewScoped
 public class ChartView implements Serializable {
  
-	private LineChartModel lineModel1;
-    //private LineChartModel lineModel2;
-    private LineChartModel areaModel;
-    private LineChartModel dateModel;
+
+    private Grafico graficoDiario;
+    private Grafico graficoMensal;
+	private Grafico graficoSemanal;
+	
     private List<DadosConsumo> lista;
     private DadosConsumo temp = new DadosConsumo();
     private DadosConsumoDao dadosDao = new DadosConsumoDao();
@@ -47,138 +50,235 @@ public class ChartView implements Serializable {
 	
     private Date dataInicio;
     private Date dataFim;
+    private Date semana, dia, mes, dia_aux, semana_aux, mes_aux;
     
     private Calendar cInicio, cFim;
     
     @PostConstruct
-    public void init() {
+    public void init() { 	
     	
-        id = Integer.valueOf( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id") );       
-        
+        id = Integer.valueOf( FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id") );     
         consumidor = consumidorDao.buscaConsumidorID(id);
-        createDateModel();
-        //createLineModels();
+        
+        
+        
+        Calendar cal = Calendar.getInstance();
+        dia_aux = dia = cal.getTime();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 00);
+        dia_aux = dia = cal.getTime();
+
+        
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        dataFim = cal.getTime();
+        
+        System.out.println("Dia   : "+ dia.toString());
+        System.out.println("Inicio: "+ dataInicio.toString());
+        System.out.println("Fim   : "+ dataFim.toString());
+        
+        graficoDiario = new Grafico();
+        graficoDiario.constroiGrafico(id, dataInicio, dataFim);
+        
+        
+        
+        cal.setTime(dia);
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        semana_aux = semana = cal.getTime();
+        
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        dataFim = cal.getTime();
+        
+        System.out.println("Semana: "+ semana.toString());
+        System.out.println("Inicio: "+ dataInicio.toString());
+        System.out.println("Fim   : "+ dataFim.toString());
+        
+        graficoSemanal = new Grafico();
+        graficoSemanal.constroiGrafico(id, dataInicio, dataFim); 
+        
+        
+        
+        cal.setTime(dia);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        mes_aux = mes = cal.getTime();
+        
+        dataInicio = cal.getTime();
+        cal.add(Calendar.MONTH, 1);
+        dataFim = cal.getTime();
+        
+        System.out.println("Mes: "+ mes.toString());
+        System.out.println("Inicio: "+ dataInicio.toString());
+        System.out.println("Fim   : "+ dataFim.toString());
+        
+        graficoMensal = new Grafico();
+        graficoMensal.constroiGrafico(id, dataInicio, dataFim);
+        
+        
     }
-    
 
     
-    private void createDateModel() {
-        dateModel = new LineChartModel();
-        LineChartSeries series1 = new LineChartSeries();
-        int id_c = 14;
+    
+    public void selecaoDia(SelectEvent event) {
         
-        Calendar c, c2;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime((Date)event.getObject());
+        dia_aux = dia = cal.getTime();
         
-        c = Calendar.getInstance();
-        c2 = Calendar.getInstance();
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        dataFim = cal.getTime();
         
-		c.set(Calendar.YEAR, 1999);
-        c.set(Calendar.MONTH, 9);
-        c.set(Calendar.DAY_OF_MONTH, 25);
-        c.set(Calendar.HOUR_OF_DAY, 00);
-        c.set(Calendar.MINUTE, 00);
-        c.set(Calendar.SECOND, 00);
-        
-        c2.set(Calendar.YEAR, 1999);
-        c2.set(Calendar.MONTH, 9);
-        c2.set(Calendar.DAY_OF_MONTH, 27);
-        c2.set(Calendar.HOUR_OF_DAY, 23);
-        c2.set(Calendar.MINUTE, 59);
-        c2.set(Calendar.SECOND, 59);
+        System.out.println("Seleciona dia");
+        System.out.println("Dia: "   + dia.toString());
+        System.out.println("Inicio: "+ dataInicio.toString());
+        System.out.println("Fim   : "+ dataFim.toString());
         
         
-        lista = dadosDao.getListaIntervaloDadosConsumoPorConsumidor(id_c, c.getTime(), c2.getTime() );
-        
-        String s;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        
-        
-        for(int i = 0; i < lista.size(); i++){
-        	
-        	
-            s = sdf.format(lista.get(i).getData_hora()) ;
-            
-        	series1.set( s , lista.get(i).getValor() );
-        }
-        
-        
-        series1.setLabel("Series 1");
-        series1.setShowMarker(false);
-        series1.setFill(false);
-        /*
-        series1.set("2014-01-01 08:00:00", 51);
-        series1.set("2014-01-01 08:30:00", 22);
-        series1.set("2014-01-01 10:20:00", 65);
-        series1.set("2014-01-01 15:10:00", 35);
-        */
-        dateModel.addSeries(series1);
-        //dateModel.setTitle("Area Chart");
-        //dateModel.setLegendPosition("ne");
-        //dateModel.setStacked(true);
-        //dateModel.setShowPointLabels(false);
-       ///dateModel.setShadow(false);
-        //dateModel.setZoom(false);
-        
-        
-        
-        dateModel.getAxis(AxisType.Y).setLabel("Values");
-        
-        DateAxis axis = new DateAxis("Dates");  // x
-        axis.setTickAngle(-50);
-        /*
-        axis.setMin("2014-01-01 00:00:00");
-        axis.setMax("2014-01-01 23:59:00");
-        */
-        axis.setTickFormat("%H:%M:%S");
-        dateModel.getAxes().put(AxisType.X, axis);
+        graficoDiario = new Grafico();
+        graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
     }
     
-    
-    public void onDateSelect(SelectEvent event) {
-    	
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    public void selecaoSemana(SelectEvent event) {
+        //FacesContext facesContext = FacesContext.getCurrentInstance();
+        //SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         //facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
-        System.out.println("teste2 " + format.format(event.getObject()));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime((Date)event.getObject());
+        
+        //semanal
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        semana_aux = semana = cal.getTime();
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        dataFim = cal.getTime();
+        
+        graficoSemanal = new Grafico();
+        graficoSemanal.constroiGrafico(id, dataInicio, dataFim);    
+        
+    }
+    
+    public void selecaoMes(SelectEvent event) {    
+        Calendar cal = Calendar.getInstance();
+        cal.setTime((Date)event.getObject());
+        
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        mes_aux = mes = cal.getTime();
+        dataInicio = cal.getTime();
+        cal.add(Calendar.MONTH, 1);
+        dataFim = cal.getTime();
+        
+        graficoMensal = new Grafico();
+        graficoMensal.constroiGrafico(id, dataInicio, dataFim);
     }
      
     public void click() {        
         System.out.println("teste1" + dataInicio.toString());
-        LineChartSeries series1 = new LineChartSeries();
         
-        dateModel = new LineChartModel();
+        graficoDiario = new Grafico();
+        graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
+    }
+    
+    
+    public void botaoDiaAnterior() { 
+    	
+    	Calendar cal = Calendar.getInstance();
+        cal.setTime(dia_aux);
+        cal.add(Calendar.DAY_OF_YEAR, -1);
         
-        lista = dadosDao.getListaIntervaloDadosConsumoPorConsumidor(id, dataInicio, dataFim );
+        dia_aux = dia = cal.getTime();
         
-        String s;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        dataFim = cal.getTime();
+        
+        System.out.println("Dia anterior");
+        System.out.println("Dia: "   + dia.toString());
+        System.out.println("Inicio: "+ dataInicio.toString());
+        System.out.println("Fim   : "+ dataFim.toString());
+        
+        graficoDiario = new Grafico();
+        graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
+    }
+    
+    public void botaoDiaSeguinte() { 
+    	
+    	Calendar cal = Calendar.getInstance();
+        cal.setTime(dia_aux);
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        dia_aux = dia = cal.getTime();
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        dataFim = cal.getTime();
+        
+        System.out.println("Proximo dia");
+        System.out.println("Dia: "   + dia.toString());
+        System.out.println("Inicio: "+ dataInicio.toString());
+        System.out.println("Fim   : "+ dataFim.toString());
+        
+        graficoDiario = new Grafico();
+        graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
+    }
+    
+    public void botaoSemanaAnterior() { 
+    	Calendar cal = Calendar.getInstance();
+        cal.setTime(semana);
+        cal.add(Calendar.DAY_OF_YEAR, -7);
+        semana_aux = semana = cal.getTime();
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        dataFim = cal.getTime();
+        
+        graficoSemanal = new Grafico();
+        graficoSemanal.constroiGrafico(id, dataInicio, dataFim);    
+    }
+    
+    public void botaoSemanaSeguinte() { 
+    	Calendar cal = Calendar.getInstance();
+        cal.setTime(semana);
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        semana_aux = semana = cal.getTime();
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        dataFim = cal.getTime();
+        
+        graficoSemanal = new Grafico();
+        graficoSemanal.constroiGrafico(id, dataInicio, dataFim);    
+    }
+    
+    public void botaoMesAnterior() { 
+    	Calendar cal = Calendar.getInstance();
+        cal.setTime(mes);
         
         
-        for(int i = 0; i < lista.size(); i++){
-        	
-        	
-            s = sdf.format(lista.get(i).getData_hora()) ;
-            
-        	series1.set( s , lista.get(i).getValor() );
-        }
         
+        dataInicio = cal.getTime();
+        cal.add(Calendar.MONTH, 1);
+        dataFim = cal.getTime();
         
-        series1.setLabel("Series 1");
-        series1.setShowMarker(false);
-        series1.setFill(false);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.MONTH, -1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         
-        dateModel.addSeries(series1);
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        dataFim = cal.getTime();
         
-        dateModel.getAxis(AxisType.Y).setLabel("Values");
+        graficoMensal = new Grafico();
+        graficoMensal.constroiGrafico(id, dataInicio, dataFim);    
+    }
+    
+    public void botaoMesSeguinte() { 
+    	Calendar cal = Calendar.getInstance();
+        cal.setTime(mes);
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        dataInicio = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 7);
+        dataFim = cal.getTime();
         
-        DateAxis axis = new DateAxis("Dates");  // x
-        axis.setTickAngle(-50);
-        /*
-        axis.setMin("2014-01-01 00:00:00");
-        axis.setMax("2014-01-01 23:59:00");
-        */
-        axis.setTickFormat("%H:%M:%S");
-        dateModel.getAxes().put(AxisType.X, axis);
+        graficoMensal = new Grafico();
+        graficoMensal.constroiGrafico(id, dataInicio, dataFim);    
     }
     
     
@@ -191,8 +291,16 @@ public class ChartView implements Serializable {
 		this.id = id;
 	}
     
-    public LineChartModel getDateModel() {
-        return dateModel;
+    public LineChartModel getGraficoDiario() {
+        return graficoDiario;
+    }
+    
+    public LineChartModel getGraficoMensal() {
+        return graficoMensal;
+    }
+    
+    public LineChartModel getGraficoSemanal() {
+        return graficoSemanal;
     }
     
     public Consumidor getConsumidor(){
@@ -214,5 +322,32 @@ public class ChartView implements Serializable {
     public void setDataFim(Date dataFim) {
         this.dataFim = dataFim;
     }
+
+	public Date getSemana() {
+		return semana;
+	}
+
+	public void setSemana(Date semana) {
+		this.semana = semana;
+	}
+	
+	public Date getDia() {
+		return dia;
+	}
+
+	public void setDia(Date dia) {
+		this.dia = dia;
+	}
+	
+	public Date getMes() {
+		return mes;
+	}
+
+	public void setMes(Date mes) {
+		this.mes = mes;
+	}
+	
+    
+    
  
 }

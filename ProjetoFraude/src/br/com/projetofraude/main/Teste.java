@@ -26,36 +26,38 @@ public class Teste {
 		DadosConsumo 	dados 		= new DadosConsumo();
 		
 		float value;
-		int k;
+		double k;
 		
-		dados.setId_consumidor(14);
+		dados.setId_consumidor(1);
 		dados.setValor(12);
 		
 		Calendar c = Calendar.getInstance();
 		
-		c.set(Calendar.YEAR, 2010);
-        c.set(Calendar.MONTH, 0);
-        c.set(Calendar.DAY_OF_MONTH, 0);
-        
-        c.set(Calendar.HOUR_OF_DAY, 18);
-        c.set(Calendar.MINUTE, 50);
+		
+		c.set(Calendar.YEAR, 2016);
+        c.set(Calendar.MONTH, 9);
+        c.set(Calendar.DAY_OF_MONTH, 03);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 00);
 		
 		dados.setData_hora(c.getTime());
 		
-		k = 0;
+		k = 0;		
 		
-		for(int m = 0; m < 35; m++){		
+		//Insere dados de consumo arbitrarios
+		
+		for(int d = 0; d < 100; d++){	// dias		
 			
-		    for(int j = 0; j < 24; j++){
+		    for(int h = 0; h < 24; h++){  	//horas
 		    	
-		    	dados.getData_hora().setHours(j);
+		    	dados.getData_hora().setHours(h);  
 		    	
-			    for(int i = 0; i < 60; i = i + 15){
+			    for(int m = 0; m < 60; m = m + 15){		//minutos
 			    	
-			    	dados.getData_hora().setMinutes(i);
+			    	dados.getData_hora().setMinutes(m);
 			    	
-			    	value = (float) ( 8 + 2*(Math.sin(k*15)) );
+			    	value = (float) ( 5 + (Math.sin(k/100)) + (Math.cos(k/20)));
 			    	
 			    	dados.setValor(value);
 			    	
@@ -63,16 +65,14 @@ public class Teste {
 			    	
 				    k++;
 			    }
-	
+			    
 		    }
-		    
 		    c.add(Calendar.DAY_OF_YEAR, 1);
 		    dados.setData_hora(c.getTime());
 		}
 	    
 		
 		
-	    //testeDatas();
 
 	}
 	
