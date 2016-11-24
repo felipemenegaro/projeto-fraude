@@ -29,6 +29,13 @@ public class DadosConsumoBean {
         return "fraude";
     }
 */
+	
+	public void inserirDados() {
+		new DadosConsumoDao().addDadosConsumo(temp);
+		temp.clear();
+	}
+	
+	
 	public DadosConsumo getDadosConsumo() {
 		return temp;
 	}

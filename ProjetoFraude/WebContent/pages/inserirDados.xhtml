@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-<title>Insert title here</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Dados de Consumo</title>
 </head>
+
 <body>
 
+<ui:composition template="/Templates/modeloGeral.xhtml">
+		<ui:define name="conteudo">
+			
+			<h:form>
+            
+                <br/><br/>
+                
+                <h:panelGrid columns="2">
+                
+                    Id Consumidor:  
+                    <p:inputText id="idCons" value="#{dadosConsumoBean.dadosConsumo.id_consumidor}" />
+                    
+                    Data/Horário:  	                 
+                    <p:calendar  id="data"   value="#{dadosConsumoBean.dadosConsumo.data_hora}" locale="pt" navigator="true" pattern="dd-MM-yyyy HH:mm:ss" />
+                   
+                    Medição:  		
+                    <p:inputText id="valor"	value="#{dadosConsumoBean.dadosConsumo.valor}"/>
+                   
+              
+                    <h:commandButton value="Cadastrar" action="#{dadosConsumoBean.inserirDados}"/>        
+
+                </h:panelGrid>
+
+		
+			</h:form>
+		
+		</ui:define>
+	</ui:composition>
+	
 </body>
 </html>

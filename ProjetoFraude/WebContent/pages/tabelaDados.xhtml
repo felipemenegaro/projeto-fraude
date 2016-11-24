@@ -24,17 +24,21 @@
 		<h3 style="margin-top:0">Dados do cliente</h3>
 		
 		<h:panelGrid columns="2">
-                
-           Consumidor: <h:outputText  	id="nomeTxt"  	value="#{chartView.consumidor.descricao}"/>
-           ID:         <h:outputText  	id="idTxt"    	value="#{chartView.consumidor.id}"/> 
-           Tipo:	   <h:outputText 	id="tipoTxt"    value="#{chartView.consumidor.tipo}"/>
-           Endereco:   <h:outputText   	id="endTxt" 	value="#{chartView.consumidor.endereço}"/>
-           Suspeita Fraude:	<h:outputText id="fraudeTxt" 	value="#{chartView.consumidor.suspeitaFraude}"/>
+           <p:outputLabel>Consumidor:</p:outputLabel>   
+           <h:outputText  	id="nomeTxt"  	value="#{chartView.consumidor.descricao}"/>
+           <p:outputLabel>ID:</p:outputLabel>         
+           <h:outputText  	id="idTxt"    	value="#{chartView.consumidor.id}"/> 
+           <p:outputLabel>Tipo:</p:outputLabel> 	   
+           <h:outputText 	id="tipoTxt"    value="#{chartView.consumidor.tipo}"/>
+           <p:outputLabel>Endereço:</p:outputLabel>    
+           <h:outputText   	id="endTxt" 	value="#{chartView.consumidor.endereço}"/>
+           <p:outputLabel>Suspeita Fraude:</p:outputLabel> 	
+           <h:outputText id="fraudeTxt" 	value="#{chartView.consumidor.suspeitaFraude}"/>
                    	 				
         </h:panelGrid>
 		
 		
-		<br/><br/>
+		<br/><p:separator /><br/>
 		
 		
         <h3 style="margin-top:0">Dados de Consumo</h3>
@@ -49,14 +53,17 @@
 		    	 	<br/> 		        	
 	        	
 		        	<p:commandButton actionListener="#{chartView.botaoDiaAnterior()}" icon="ui-icon-arrow-1-w"
-			    	ajax="true" update="graficoConsumoDia" />
-		    	 
+			    	ajax="true" update="graficoConsumoDia, diario, labelDia" />
+	    	 
 		    	 	<p:calendar id="diario" value="#{chartView.dia}" pattern="yyyy-MM-dd" >
-				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoDia}" update="graficoConsumoDia, @this"/>
+				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoDia}" update="graficoConsumoDia, labelDia"/>
 				  	</p:calendar>
 				  	
 				  	<p:commandButton actionListener="#{chartView.botaoDiaSeguinte()}" icon="ui-icon-arrow-1-e"
-			    	ajax="true" update="graficoConsumoDia" />
+			    	ajax="true" update="graficoConsumoDia, diario, labelDia" />
+				  	
+				  	<p:outputLabel id="labelDia" value="#{chartView.labelDia}"
+				  		style="display: block; text-align: center; font-weight: bold; font-size: 14px;" />
 				  	
 				  	<p:chart id="graficoConsumoDia" type="line" model="#{chartView.graficoDiario}" style="height:300px;" />
 				  	
@@ -66,14 +73,17 @@
 				  	<br/>
 				  	
 				  	<p:commandButton actionListener="#{chartView.botaoSemanaAnterior()}" icon="ui-icon-arrow-1-w"
-			    	ajax="true" update="graficoConsumoSemana" />
+			    	ajax="true" update="graficoConsumoSemana, semanal, labelSemana" />
 			    	
 				  	<p:calendar id="semanal" value="#{chartView.semana}" showWeek="true" pattern="yyyy-MM-dd" >
-				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoSemana}" update="graficoConsumoSemana"/>
+				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoSemana}" update="graficoConsumoSemana, labelSemana"/>
 				  	</p:calendar>
 				  	
 				  	<p:commandButton actionListener="#{chartView.botaoSemanaSeguinte()}" icon="ui-icon-arrow-1-e"
-			    	ajax="true" update="graficoConsumoSemana" />
+			    	ajax="true" update="graficoConsumoSemana, semanal, labelSemana" />
+			    	
+				  	<p:outputLabel id="labelSemana" value="#{chartView.labelSemana}" 
+						style="display: block; text-align: center; font-weight: bold; font-size: 14px;" />
 				  	
 				  	<p:chart id="graficoConsumoSemana" type="line" model="#{chartView.graficoSemanal}" style="height:300px;" />
 				  	
@@ -83,14 +93,17 @@
 				  	<br/>
 		        	
 				  	<p:commandButton actionListener="#{chartView.botaoMesAnterior()}" icon="ui-icon-arrow-1-w"
-			    	ajax="true" update="graficoConsumoMes" />
+			    	ajax="true" update="graficoConsumoMes, mensal, labelMes" />
 			    	
 				  	<p:calendar id="mensal" value="#{chartView.mes}" pattern="yyyy-MM-dd" >
-				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoMes}" update="graficoConsumoMes,mensal"/>
+				  		<p:ajax event="dateSelect" listener="#{chartView.selecaoMes}" update="graficoConsumoMes, mensal, labelMes"/>
 				  	</p:calendar>
 				  	
 				  	<p:commandButton actionListener="#{chartView.botaoMesSeguinte()}" icon="ui-icon-arrow-1-e"
-			    	ajax="true" update="graficoConsumoMes" />
+			    	ajax="true" update="graficoConsumoMes, mensal, labelMes" />
+				  	
+				  	<p:outputLabel id="labelMes" value="#{chartView.labelMes}"
+				  		style="display: block; text-align: center; font-weight: bold; font-size: 14px;" />
 				  	
 				  	<p:chart id="graficoConsumoMes" type="line" model="#{chartView.graficoMensal}" style="height:300px;" />
 				  	
@@ -117,6 +130,48 @@
 		  	
 		</h:form>
 		
+
+		<br/><p:separator /><br/>		
+		
+        <h3 style="margin-top:0">Fraudes</h3>
+        
+				<h:dataTable var="dados" value="#{chartView.listaFraudeConsumidor}" border="0">
+                    
+                    <h:column headerText="id">
+                        <f:facet name="header">
+                            ID FRAUDE
+                        </f:facet>
+                        <h:outputText value="#{dados.id_fraude}"/>
+                    </h:column>
+                    
+                    <h:column headerText="email">
+                        <f:facet name="header">
+                            ID CONSUMIDOR
+                        </f:facet>
+                        <h:outputText value="#{dados.id_consumidor}"/>
+                    </h:column>
+                    
+                     <h:column headerText="data">
+                        <f:facet name="header">
+                            DATA DETECÇÃO
+                        </f:facet>
+                        <h:outputText value="#{dados.data_detecção}"/>
+                    </h:column>
+                    
+                    <h:column headerText="tipo">
+                        <f:facet name="header">
+                            TIPO
+                        </f:facet>
+                        <h:outputText value="#{dados.tipo}"/>
+                    </h:column>
+                    
+                    <h:column headerText="status">
+                        <f:facet name="header">
+                            STATUS
+                        </f:facet>
+                        <h:outputText value="#{dados.status}"/>
+                    </h:column>
+                </h:dataTable>
 		
 		
 	

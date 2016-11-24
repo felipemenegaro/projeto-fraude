@@ -53,9 +53,9 @@ public class Grafico extends LineChartModel{
         
         //this.setZoom(true);
         
-        this.getAxis(AxisType.Y).setLabel("Values");
+        //this.getAxis(AxisType.Y).setLabel("Values");
         
-        DateAxis axis = new DateAxis("Dates");  // x
+        DateAxis axis = new DateAxis();  // x
         axis.setTickAngle(-50);
         /*
         axis.setMin("2014-01-01 00:00:00");

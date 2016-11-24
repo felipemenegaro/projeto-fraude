@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -26,8 +27,10 @@ import org.primefaces.model.chart.LineChartSeries;
 
 import br.com.projetofraude.dao.ConsumidorDao;
 import br.com.projetofraude.dao.DadosConsumoDao;
+import br.com.projetofraude.dao.FraudeDao;
 import br.com.projetofraude.model.Consumidor;
 import br.com.projetofraude.model.DadosConsumo;
+import br.com.projetofraude.model.Fraude;
 import br.com.projetofraude.util.Grafico;
  
 
@@ -51,6 +54,8 @@ public class ChartView implements Serializable {
     private Date dataInicio;
     private Date dataFim;
     private Date semana, dia, mes, dia_aux, semana_aux, mes_aux;
+    
+    private String labelDia, labelSemana, labelMes, labelIntevalo;
     
     private Calendar cInicio, cFim;
     
@@ -97,8 +102,7 @@ public class ChartView implements Serializable {
         
         graficoSemanal = new Grafico();
         graficoSemanal.constroiGrafico(id, dataInicio, dataFim); 
-        
-        
+      
         
         cal.setTime(dia);
         cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -114,14 +118,10 @@ public class ChartView implements Serializable {
         
         graficoMensal = new Grafico();
         graficoMensal.constroiGrafico(id, dataInicio, dataFim);
-        
-        
+        updateLabels();
     }
-
-    
     
     public void selecaoDia(SelectEvent event) {
-        
         Calendar cal = Calendar.getInstance();
         cal.setTime((Date)event.getObject());
         dia_aux = dia = cal.getTime();
@@ -130,14 +130,10 @@ public class ChartView implements Serializable {
         cal.add(Calendar.DAY_OF_YEAR, 1);
         dataFim = cal.getTime();
         
-        System.out.println("Seleciona dia");
-        System.out.println("Dia: "   + dia.toString());
-        System.out.println("Inicio: "+ dataInicio.toString());
-        System.out.println("Fim   : "+ dataFim.toString());
-        
-        
         graficoDiario = new Grafico();
         graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
+
     }
     
     public void selecaoSemana(SelectEvent event) {
@@ -156,6 +152,8 @@ public class ChartView implements Serializable {
         
         graficoSemanal = new Grafico();
         graficoSemanal.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
+
         
     }
     
@@ -171,6 +169,8 @@ public class ChartView implements Serializable {
         
         graficoMensal = new Grafico();
         graficoMensal.constroiGrafico(id, dataInicio, dataFim);
+        updateLabels();
+
     }
      
     public void click() {        
@@ -178,32 +178,25 @@ public class ChartView implements Serializable {
         
         graficoDiario = new Grafico();
         graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
+
     }
     
     
     public void botaoDiaAnterior() { 
-    	
     	Calendar cal = Calendar.getInstance();
         cal.setTime(dia_aux);
         cal.add(Calendar.DAY_OF_YEAR, -1);
-        
         dia_aux = dia = cal.getTime();
-        
         dataInicio = cal.getTime();
         cal.add(Calendar.DAY_OF_YEAR, 1);
-        dataFim = cal.getTime();
-        
-        System.out.println("Dia anterior");
-        System.out.println("Dia: "   + dia.toString());
-        System.out.println("Inicio: "+ dataInicio.toString());
-        System.out.println("Fim   : "+ dataFim.toString());
-        
+        dataFim = cal.getTime(); 
         graficoDiario = new Grafico();
         graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
     }
     
     public void botaoDiaSeguinte() { 
-    	
     	Calendar cal = Calendar.getInstance();
         cal.setTime(dia_aux);
         cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -211,74 +204,78 @@ public class ChartView implements Serializable {
         dataInicio = cal.getTime();
         cal.add(Calendar.DAY_OF_YEAR, 1);
         dataFim = cal.getTime();
-        
-        System.out.println("Proximo dia");
-        System.out.println("Dia: "   + dia.toString());
-        System.out.println("Inicio: "+ dataInicio.toString());
-        System.out.println("Fim   : "+ dataFim.toString());
-        
         graficoDiario = new Grafico();
         graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
     }
     
     public void botaoSemanaAnterior() { 
     	Calendar cal = Calendar.getInstance();
-        cal.setTime(semana);
+        cal.setTime(semana_aux);
         cal.add(Calendar.DAY_OF_YEAR, -7);
         semana_aux = semana = cal.getTime();
         dataInicio = cal.getTime();
         cal.add(Calendar.DAY_OF_YEAR, 7);
         dataFim = cal.getTime();
-        
         graficoSemanal = new Grafico();
         graficoSemanal.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
     }
     
     public void botaoSemanaSeguinte() { 
     	Calendar cal = Calendar.getInstance();
-        cal.setTime(semana);
+        cal.setTime(semana_aux);
         cal.add(Calendar.DAY_OF_YEAR, 7);
         semana_aux = semana = cal.getTime();
         dataInicio = cal.getTime();
         cal.add(Calendar.DAY_OF_YEAR, 7);
-        dataFim = cal.getTime();
-        
+        dataFim = cal.getTime();  
         graficoSemanal = new Grafico();
         graficoSemanal.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
+
     }
     
     public void botaoMesAnterior() { 
     	Calendar cal = Calendar.getInstance();
-        cal.setTime(mes);
-        
-        
-        
+        cal.setTime(mes_aux); 
+
         dataInicio = cal.getTime();
-        cal.add(Calendar.MONTH, 1);
-        dataFim = cal.getTime();
-        
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.add(Calendar.MONTH, -1);
         cal.set(Calendar.DAY_OF_MONTH, 1);
-        
         dataInicio = cal.getTime();
-        cal.add(Calendar.DAY_OF_YEAR, 7);
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         dataFim = cal.getTime();
+        
+        mes_aux = dataInicio;
         
         graficoMensal = new Grafico();
         graficoMensal.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
+
     }
     
     public void botaoMesSeguinte() { 
     	Calendar cal = Calendar.getInstance();
-        cal.setTime(mes);
-        cal.add(Calendar.DAY_OF_YEAR, 7);
+        cal.setTime(mes_aux);
+        
         dataInicio = cal.getTime();
-        cal.add(Calendar.DAY_OF_YEAR, 7);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        dataInicio = cal.getTime();
+        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         dataFim = cal.getTime();
+        
+        mes_aux = dataInicio;
         
         graficoMensal = new Grafico();
         graficoMensal.constroiGrafico(id, dataInicio, dataFim);    
+        updateLabels();
+
     }
     
     
@@ -347,6 +344,46 @@ public class ChartView implements Serializable {
 		this.mes = mes;
 	}
 	
+	
+	public List<Fraude> getlistaFraudeConsumidor(){
+		return (new FraudeDao()).getListaFraudesPorConsumidor(id);
+	}
+	
+	
+	private void updateLabels(){
+		Locale localeBR = new Locale("pt", "BR");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd 'de' MMMMM 'de' yyyy", localeBR);
+		labelDia = sdf.format(dia_aux);
+		
+		sdf = new SimpleDateFormat("MMMMM 'de' yyyy", localeBR);   	
+		labelMes = sdf.format(mes_aux);
+		
+		Calendar cal = Calendar.getInstance();
+        cal.setTime(semana_aux);
+		sdf = new SimpleDateFormat("dd/MM/yyyy");  
+		Date d1, d2;	
+		d1 = semana_aux;
+		cal.add(Calendar.DAY_OF_YEAR, 7);
+        d2 = cal.getTime();
+		labelSemana = sdf.format(d1) + " a " + sdf.format(d2);	
+		
+	}
+	
+	public String getLabelDia(){
+		 
+        return labelDia;
+	}
+	
+	public String getLabelMes(){
+		
+		return labelMes;
+				
+	}
+	
+	public String getLabelSemana(){
+		
+        return labelSemana;
+	}
     
     
  
