@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+    <!-- 
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxtKafN6AR0DSTzcPYPld4QsbhZFQJLcM" />
+         -->
+        <title>Teste</title>
+    </h:head>
+    <h:body>
+    
+    
+<ui:composition template="/Templates/modeloGeral.xhtml">
+	<ui:define name="conteudo">
+		
+    	<!-- 
+            <p:gmap center="-28.943,-49.48" zoom="14" type="ROADMAP" style="width:100%;height:500px" />
+          -->  
+          
+            <h:form>
+            
+                Consumidores<br/><br/>
+                
+                <h:panelGrid columns="2">
+                
+                    Descricao:   		<h:inputText id="nomeTxt" 	value="#{consumidorBean.consumidor.descricao}"/>
+                    Endereco:  			<h:inputText id="emailTxt" 	value="#{consumidorBean.consumidor.endereço}"/>
+                    Latitude:  			<h:inputText id="latxt" 	value="#{consumidorBean.consumidor.latitude}"/>
+                    Longitude:  		<h:inputText id="longTxt" 	value="#{consumidorBean.consumidor.longitude}"/>
+                    Suspeita Fraude:	<h:selectBooleanCheckbox  	value="#{consumidorBean.consumidor.suspeitaFraude}"/>
+                    Tipo: 
+                   	 			<h:selectOneMenu value="#{consumidorBean.consumidor.tipo}" >
+    								<f:selectItems value="#{consumidorBean.tiposConsumidor}" />
+								</h:selectOneMenu>
+        			
+                    <h:inputHidden/>
+                    <h:commandButton value="Cadastrar" action="#{consumidorBean.adicionarConsumidor}"/>        
+
+                </h:panelGrid>
+                
+                
+                
+                <h:dataTable var="dados" value="#{consumidorBean.listaConsumidor}" border="1">
+                    
+                    <h:column headerText="name">
+                        <f:facet name="header">
+                            DESCRICAO
+                        </f:facet>
+                        <h:outputText value="#{dados.descricao}"/>
+                    </h:column>
+                    
+                    <h:column headerText="email">
+                        <f:facet name="header">
+                            ENDERECO
+                        </f:facet>
+                        <h:outputText value="#{dados.endereço}"/>
+                    </h:column>
+                    
+                    <h:column headerText="lat">
+                        <f:facet name="header">
+                            LATITUDE
+                        </f:facet>
+                        <h:outputText value="#{dados.latitude}"/>
+                    </h:column>
+                    
+                    <h:column headerText="long">
+                        <f:facet name="header">
+                            LONGITUDE
+                        </f:facet>
+                        <h:outputText value="#{dados.longitude}"/>
+                    </h:column>
+                    
+                    <h:column headerText="fraude">
+                        <f:facet name="header">
+                            FRAUDE
+                        </f:facet>
+                        <h:outputText value="#{dados.suspeitaFraude}"/>
+                    </h:column>
+                   	
+                   	<h:column headerText="tip">
+                        <f:facet name="header">
+                            TIPO
+                        </f:facet>
+                        <h:outputText value="#{dados.tipo}"/>
+                    </h:column>
+                    
+                </h:dataTable>
+            
+            
+            
+            </h:form>
+            
+            
+          			
+			
+		</ui:define>
+	</ui:composition>
+                
+
+    </h:body>
+</html>
+

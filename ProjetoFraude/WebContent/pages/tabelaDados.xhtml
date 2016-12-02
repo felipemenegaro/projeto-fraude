@@ -128,13 +128,15 @@
 		  	
 		  	</p:tabView>
 		  	
-		</h:form>
+		
 		
 
 		<br/><p:separator /><br/>		
 		
         <h3 style="margin-top:0">Fraudes</h3>
         
+        
+
 				<h:dataTable var="dados" value="#{chartView.listaFraudeConsumidor}" border="0">
                     
                     <h:column headerText="id">
@@ -171,8 +173,58 @@
                         </f:facet>
                         <h:outputText value="#{dados.status}"/>
                     </h:column>
+                    
+                    
+                    
+                    <p:column style="width:32px;text-align: center">
+			             <p:commandButton 	update=":form:fraudeDetail" oncomplete="PF('fraudeDialog').show()"
+			             					icon="ui-icon-search" title="View" actionListener="#{chartView.selecaoFraude()}" >
+			                <f:setPropertyActionListener value="#{dados}" target="#{chartView.fraude}" />
+			            </p:commandButton>
+			        </p:column>
+                    
+                    
                 </h:dataTable>
-		
+                
+                <p:dialog header="Deteção Fraude" widgetVar="fraudeDialog" resizable="false">
+			        <p:outputPanel id="fraudeDetail" style="text-align:center;">
+			            <p:panelGrid  columns="2" rendered="#{not empty chartView.fraude}" columnClasses="label,value">
+			                <f:facet name="header">
+			 
+			                <h:outputText value="teste" />
+			  
+			                </f:facet>
+			 
+			                <h:outputText value="Id:" />
+			                <h:outputText value="#{chartView.fraude.id_fraude}" />
+			 
+			                <h:outputText value="Consumidor" />
+			                <h:outputText value="#{chartView.fraude.id_consumidor}" />
+			 
+			                <h:outputText value="Data:" />
+			                <h:outputText value="#{chartView.fraude.data_detecção}" />
+			 
+			                <h:outputText value="Status" />
+			                <h:outputText value="#{chartView.fraude.status}" />
+			                
+			                <h:outputText value="Tipo" />
+			                <h:outputText value="#{chartView.fraude.tipo}" />
+			                
+			                <!-- 
+			           			<p:chart id="graficoFraude" rendered="#{not empty chartView.fraude}"
+			                	type="line" model="#{chartView.graficoFraude}" style="height:300px;" />
+			                 -->
+			                
+			            </p:panelGrid>
+			            
+			        </p:outputPanel>
+			        
+			        
+			    </p:dialog>
+    
+    
+    
+		</h:form>
 		
 	
 			

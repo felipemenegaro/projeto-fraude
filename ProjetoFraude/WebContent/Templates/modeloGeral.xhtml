@@ -22,9 +22,8 @@
 							closable="false" collapsible="false">  
 	<h:form>  	          
 		<p:panelMenu>
-
-			<p:submenu label="Consumidores">
-       			<p:menuitem value = "Todos"			outcome="/pages/Todos.xhtml" />
+       		<p:submenu label="Consumidores">
+       			<p:menuitem value = "Todos"			outcome="/pages/Todos.xhtml"/>
 				<p:menuitem value = "Residêncial"	outcome="/pages/Residencia.xhtml"/>
 				<p:menuitem value = "Comercial"		outcome="/pages/Comercio.xhtml"/>
 				<p:menuitem value = "Industrial"	outcome="/pages/Industria.xhtml"/>
@@ -41,8 +40,9 @@
 				<p:menuitem value = "Dados"		outcome="/pages/inserirDados.xhtml"/>
 			</p:submenu>
 			<p:submenu label="Dados">
-				<p:menuitem value = "Cliente"	outcome="/pages/tabelaDados.xhtml"/>
+				<p:menuitem value = "Cliente"	outcome="/pages/todosDados.xhtml"/>
 			</p:submenu>
+			
 			
 		</p:panelMenu>
 	</h:form>

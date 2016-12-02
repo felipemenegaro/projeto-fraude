@@ -28,15 +28,15 @@ public class Teste {
 		float value;
 		double k;
 		
-		dados.setId_consumidor(1);
+		dados.setId_consumidor(9);
 		dados.setValor(12);
 		
 		Calendar c = Calendar.getInstance();
 		
 		
 		c.set(Calendar.YEAR, 2016);
-        c.set(Calendar.MONTH, 9);
-        c.set(Calendar.DAY_OF_MONTH, 03);
+        c.set(Calendar.MONTH, 0);
+        c.set(Calendar.DAY_OF_MONTH, 01);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 00);

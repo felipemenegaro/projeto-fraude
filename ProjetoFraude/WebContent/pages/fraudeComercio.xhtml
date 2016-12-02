@@ -9,13 +9,21 @@
 	<ui:composition template="/Templates/modeloGeral.xhtml">
 		<ui:define name="conteudo">
 			<h:form>
-   	 			<p:growl id="growl" showDetail="true" />
-			    <p:gmap id="gmap" center="-28.952962, -49.471081" zoom="13" type="HYBRID" model="#{marcaComercio.simpleModel}"  style="width:100%;height:400px">
-        			<p:ajax event="overlaySelect" listener="#{mapaBean.onMarkerSelect}" update="growl" />
-    			</p:gmap>
+				<p:growl id="growl" life="2000" />
+				<p:gmap id="gmap" center="-28.943,-49.48" zoom="13" type="ROADMAP"
+					model="#{fraudeComercio.simpleModel}" style="width:100%;height:400px">
+
+					<p:ajax event="overlaySelect" listener="#{fraudeComercio.onMarkerSelect}" />
+
+					<p:gmapInfoWindow id="infoWindow">
+						<p:outputPanel style="text-align: left; display: block; margin: auto">
+							<pre>
+							<h:outputText value="#{fraudeComercio.marker.data}" />
+							</pre>
+						</p:outputPanel>
+					</p:gmapInfoWindow>
+				</p:gmap>
 			</h:form>
 			</ui:define>
 	</ui:composition>
-	
 </html>
-

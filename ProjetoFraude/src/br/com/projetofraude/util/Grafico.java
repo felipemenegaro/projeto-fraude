@@ -51,7 +51,7 @@ public class Grafico extends LineChartModel{
         this.addSeries(series1);
         
         
-        //this.setZoom(true);
+        this.setZoom(true);
         
         //this.getAxis(AxisType.Y).setLabel("Values");
         
@@ -61,7 +61,8 @@ public class Grafico extends LineChartModel{
         axis.setMin("2014-01-01 00:00:00");
         axis.setMax("2014-01-01 23:59:00");
         */
-        axis.setTickFormat("%D %H:%M");
+        axis.setTickFormat("%d/%m/%Y %H:%M");
+        
         this.getAxes().put(AxisType.X, axis);
     }
 	

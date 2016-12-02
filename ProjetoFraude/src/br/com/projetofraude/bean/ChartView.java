@@ -43,8 +43,10 @@ public class ChartView implements Serializable {
     private Grafico graficoDiario;
     private Grafico graficoMensal;
 	private Grafico graficoSemanal;
-	
-    private List<DadosConsumo> lista;
+	private Grafico graficoFraude;
+	private Fraude fraude;
+
+	private List<DadosConsumo> lista;
     private DadosConsumo temp = new DadosConsumo();
     private DadosConsumoDao dadosDao = new DadosConsumoDao();
     private Consumidor consumidor;
@@ -134,6 +136,22 @@ public class ChartView implements Serializable {
         graficoDiario.constroiGrafico(id, dataInicio, dataFim);    
         updateLabels();
 
+    }
+    
+    public void selecaoFraude() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fraude.getData_detecção());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 00);
+        
+        dataInicio = cal.getTime();
+
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        dataFim = cal.getTime();
+        
+        graficoFraude = new Grafico();
+        graficoFraude.constroiGrafico(id, dataInicio, dataFim);    
     }
     
     public void selecaoSemana(SelectEvent event) {
@@ -300,6 +318,10 @@ public class ChartView implements Serializable {
         return graficoSemanal;
     }
     
+    public LineChartModel getGraficoFraude() {
+        return graficoFraude;
+    }
+    
     public Consumidor getConsumidor(){
     	return consumidor;
     }
@@ -385,6 +407,13 @@ public class ChartView implements Serializable {
         return labelSemana;
 	}
     
+	public Fraude getFraude() {
+		return fraude;
+	}
+
+	public void setFraude(Fraude fraude) {
+		this.fraude = fraude;
+	}
     
  
 }
